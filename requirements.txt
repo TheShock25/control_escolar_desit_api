@@ -3,7 +3,7 @@ Django==5.0.2
 django-compat==1.0.15
 django-cors-headers==4.7.0
 djangorestframework==3.16.1
-django-filter==25.0  # Compatible con Django 5.0
+django-filter==25.2  # Compatible con Django 5.0
 
 # Database
 mysqlclient==2.2.4  # Para MySQL local
