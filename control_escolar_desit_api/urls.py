@@ -3,14 +3,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from .views.bootstrap import VersionView
-from . import views
-from control_escolar_desit_api.views import users
-from control_escolar_desit_api.views import alumnos
-from control_escolar_desit_api.views import maestros
-from control_escolar_desit_api.views import materias
-from control_escolar_desit_api.views import estadisticas
-from control_escolar_desit_api.views import auth
-from control_escolar_desit_api.views import bootstrap
+from . import viewss
+from control_escolar_desit_api.viewss import users
+from control_escolar_desit_api.viewss import alumnos
+from control_escolar_desit_api.viewss import maestros
+from control_escolar_desit_api.viewss import materias
+from control_escolar_desit_api.viewss import estadisticas
+from control_escolar_desit_api.viewss import auth
+from control_escolar_desit_api.viewss import bootstrap
 
 urlpatterns = [
     #Create Admin
@@ -47,8 +47,8 @@ urlpatterns = [
     #Logout
         path('logout/', auth.Logout.as_view()),
         #tambien ignoren los siguientes. solo es para ver si corre el backend
-        path('', views.home, name='home'),
-    path('health/', views.health_check, name='health_check'),
+        path('', viewss.home, name='home'),
+    path('health/', viewss.health_check, name='health_check'),
     path('admin/', admin.site.urls),
         
 ]
