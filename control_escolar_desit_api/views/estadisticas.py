@@ -16,6 +16,18 @@ class EstadisticasUsuariosView(APIView):
             total_maestros = Maestros.objects.count()
             total_alumnos = Alumnos.objects.count()
             
+            # Debug: verificar datos
+            print(f"DEBUG - Admins: {total_admins}, Maestros: {total_maestros}, Alumnos: {total_alumnos}")
+            
+            # Listar usuarios para debug
+            admins_list = Administradores.objects.all()
+            maestros_list = Maestros.objects.all()
+            alumnos_list = Alumnos.objects.all()
+            
+            print(f"DEBUG - Lista admins: {[(a.id, a.user.username) for a in admins_list]}")
+            print(f"DEBUG - Lista maestros: {[(m.id, m.user.username) for m in maestros_list]}")
+            print(f"DEBUG - Lista alumnos: {[(a.id, a.user.username) for a in alumnos_list]}")
+            
             return Response({
                 'administradores': total_admins,
                 'maestros': total_maestros,
@@ -23,6 +35,7 @@ class EstadisticasUsuariosView(APIView):
                 'total_usuarios': total_admins + total_maestros + total_alumnos
             }, 200)
         except Exception as e:
+            print(f"ERROR en EstadisticasUsuariosView: {str(e)}")
             return Response({"error": str(e)}, 400)
 
 class EstadisticasMateriasView(APIView):
