@@ -18,7 +18,8 @@ ALLOWED_HOSTS = [
     "localhost", 
     "127.0.0.1",
     ".onrender.com",  # Para Render
-    "control-escolar-desit-webapp-64p8.vercel.app",  # Tu frontend
+    "control-escolar-desit-webapp-64p8.vercel.app",  # Tu frontend anterior
+    "control-escolar-desit-webapp-liart.vercel.app",  # Tu nuevo frontend
 ]
 
 # Parse ALLOWED_HOSTS from environment variable
@@ -47,9 +48,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # IMPORTANTE: Descomentado para Render
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # Para CORS - debe estar antes de CommonMiddleware
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -57,18 +58,26 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Configuración de CORS
+# Configuración de CORS - ACTUALIZADA
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:4200',  # Angular en desarrollo
-    'http://localhost:3000',  # React en desarrollo
-    'https://control-escolar-desit-webapp-64p8.vercel.app',  # Tu frontend en producción
+    'http://localhost:4200',
+    'http://localhost:3000',
+    'https://control-escolar-desit-webapp-64p8.vercel.app',
+    'https://control-escolar-desit-webapp-liart.vercel.app',
 ]
 
-# Para desarrollo, puedes permitir todos los orígenes (solo en DEBUG)
+# Permitir cualquier subdominio de vercel.app
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://[\w-]+\.vercel\.app$",
+]
+
+# Configuración temporal: permitir todos los orígenes para debug
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
+    print("CORS: Permitidos todos los orígenes (DEBUG=True)")
 else:
     CORS_ALLOW_ALL_ORIGINS = False
+    print("CORS: Solo orígenes permitidos configurados")
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -81,7 +90,6 @@ CORS_ALLOW_METHODS = [
     'PUT',
 ]
 
-# Headers adicionales permitidos para CORS
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
@@ -92,7 +100,21 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
+    'access-control-allow-origin',
+    'access-control-allow-credentials',
+    'access-control-allow-headers',
+    'access-control-allow-methods',
 ]
+
+CORS_EXPOSE_HEADERS = [
+    'content-type',
+    'x-csrf-token',
+    'authorization',
+    'access-control-allow-origin',
+]
+
+# Preflight requests cache (en segundos)
+CORS_PREFLIGHT_MAX_AGE = 86400
 
 ROOT_URLCONF = 'control_escolar_desit_api.urls'
 
@@ -123,7 +145,7 @@ try:
     DJ_DATABASE_URL_AVAILABLE = True
 except ImportError:
     DJ_DATABASE_URL_AVAILABLE = False
-    if 'runserver' not in sys.argv:  # Solo mostrar advertencia si no es desarrollo
+    if 'runserver' not in sys.argv:
         print("ADVERTENCIA: dj-database-url no está instalado. Usando configuración local.")
 
 # Configuración de base de datos
@@ -204,8 +226,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
-LANGUAGE_CODE = 'es-mx'  # Cambié a español mexicano
-TIME_ZONE = 'America/Mexico_City'  # Cambié a zona horaria de México
+LANGUAGE_CODE = 'es-mx'
+TIME_ZONE = 'America/Mexico_City'
 USE_I18N = True
 USE_TZ = True
 
@@ -217,7 +239,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-# Configuración de WhiteNoise para archivos estáticos (IMPORTANTE para producción)
+# Configuración de WhiteNoise para archivos estáticos
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files
@@ -235,8 +257,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
-        'control_escolar_desit_api.models.BearerTokenAuthentication',  # Tu autenticación personalizada
-        'rest_framework.authentication.TokenAuthentication',  # Token auth estándar
+        'control_escolar_desit_api.models.BearerTokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
@@ -301,7 +323,7 @@ if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     
     # HSTS settings
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     
@@ -318,7 +340,6 @@ logger = logging.getLogger(__name__)
 
 if DEBUG:
     logger.info("DEBUG MODE ENABLED")
-    # Para desarrollo, muestra más información de CORS
     CORS_ALLOW_ALL_ORIGINS = True
     CORS_ALLOW_CREDENTIALS = True
 else:
