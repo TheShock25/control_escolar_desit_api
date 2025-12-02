@@ -47,9 +47,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    #'whitenoise.middleware.WhiteNoiseMiddleware',  # IMPORTANTE para Render
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # IMPORTANTE: Descomentado para Render
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # Para CORS
+    'corsheaders.middleware.CorsMiddleware',  # Para CORS - debe estar antes de CommonMiddleware
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -60,6 +60,7 @@ MIDDLEWARE = [
 # Configuración de CORS
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',  # Angular en desarrollo
+    'http://localhost:3000',  # React en desarrollo
     'https://control-escolar-desit-webapp-64p8.vercel.app',  # Tu frontend en producción
 ]
 
@@ -70,6 +71,7 @@ else:
     CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',
@@ -77,6 +79,19 @@ CORS_ALLOW_METHODS = [
     'PATCH',
     'POST',
     'PUT',
+]
+
+# Headers adicionales permitidos para CORS
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
 ]
 
 ROOT_URLCONF = 'control_escolar_desit_api.urls'
@@ -202,9 +217,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-# Configuración de WhiteNoise para archivos estáticos
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+# Configuración de WhiteNoise para archivos estáticos (IMPORTANTE para producción)
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files
 MEDIA_URL = '/media/'
@@ -273,6 +287,10 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
             'propagate': False,
         },
+        'corsheaders': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
     },
 }
 
@@ -293,3 +311,17 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
+
+# Configuración adicional para debug
+import logging
+logger = logging.getLogger(__name__)
+
+if DEBUG:
+    logger.info("DEBUG MODE ENABLED")
+    # Para desarrollo, muestra más información de CORS
+    CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOW_CREDENTIALS = True
+else:
+    logger.info("PRODUCTION MODE")
+    logger.info(f"ALLOWED_HOSTS: {ALLOWED_HOSTS}")
+    logger.info(f"CORS_ALLOWED_ORIGINS: {CORS_ALLOWED_ORIGINS}")
