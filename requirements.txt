@@ -7,7 +7,7 @@ django-filter==24.3  # Compatible con Django 5.0
 
 # Database
 mysqlclient==2.2.4  # Para MySQL local
-psycopg2-binary==2.9.9  # Para PostgreSQL en Render
+psycopg2-binary==3.2.0  # Para PostgreSQL en Render
 dj-database-url==2.1.0  # Para manejar DATABASE_URL
 
 # Servidor y estáticos
