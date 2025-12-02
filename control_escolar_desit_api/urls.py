@@ -3,13 +3,13 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from .views.bootstrap import VersionView
-from control_escolar_desit_api.viewss import users
-from control_escolar_desit_api.viewss import alumnos
-from control_escolar_desit_api.viewss import maestros
-from control_escolar_desit_api.viewss import materias
-from control_escolar_desit_api.viewss import estadisticas
-from control_escolar_desit_api.viewss import auth
-from control_escolar_desit_api.viewss import bootstrap
+from control_escolar_desit_api.views import users
+from control_escolar_desit_api.views import alumnos
+from control_escolar_desit_api.views import maestros
+from control_escolar_desit_api.views import materias
+from control_escolar_desit_api.views import estadisticas
+from control_escolar_desit_api.views import auth
+from control_escolar_desit_api.views import bootstrap
 
 urlpatterns = [
     #Create Admin
