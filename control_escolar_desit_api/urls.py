@@ -10,7 +10,7 @@ from control_escolar_desit_api.views import materias
 from control_escolar_desit_api.views import estadisticas
 from control_escolar_desit_api.views import auth
 from control_escolar_desit_api.views import bootstrap
-from django.http import JsonResponse  # Añade esta importación
+from django.http import JsonResponse 
 
 # Vista raíz para verificar que la API funciona
 def home(request):
@@ -34,9 +34,7 @@ def home(request):
     })
 
 urlpatterns = [
-    # Ruta raíz - AÑADE ESTA LÍNEA
     path('', home, name='home'),
-    
     #Create Admin
     path('admin/', users.AdminView.as_view()),
     #Admin Data
